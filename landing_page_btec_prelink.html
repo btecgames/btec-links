@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTEC Games | The Sims 4 Completo</title>
+  <meta name="description" content="BTEC Games - The Sims 4 completo para Windows e MacBook. Produtos digitais, conteúdos para jogos e suporte pelo WhatsApp." />
+  <meta name="theme-color" content="#030713" />
+
+  <style>
+    :root {
+      --bg: #030713;
+      --bg-2: #07142a;
+      --cyan: #00eaff;
+      --cyan-2: #00a8ff;
+      --green: #00f5a0;
+      --green-2: #00c985;
+      --purple: #8c4dff;
+      --text: #ffffff;
+      --soft: #b9c7dd;
+      --muted: #7f92b3;
+      --glass: rgba(7, 20, 42, .74);
+      --line: rgba(255, 255, 255, .12);
+      --radius: 28px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .45);
+      --ease: cubic-bezier(.19, 1, .22, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(0, 234, 255, .22), transparent 34%),
+        radial-gradient(circle at 10% 28%, rgba(0, 95, 255, .18), transparent 28%),
+        radial-gradient(circle at 90% 22%, rgba(0, 245, 160, .14), transparent 25%),
+        linear-gradient(180deg, #020612 0%, #061225 42%, #020612 100%);
+      overflow-x: hidden;
+      padding: 12px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0, 234, 255, .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 234, 255, .035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 80%, transparent);
+      z-index: -4;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bubble-field {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -3;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -120px;
+      width: var(--s);
+      height: var(--s);
+      left: var(--x);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.75), rgba(255,255,255,.08) 18%, transparent 38%),
+        radial-gradient(circle at 70% 74%, rgba(0, 245, 160, .38), transparent 42%),
+        rgba(0, 153, 255, .16);
+      border: 1px solid rgba(0, 234, 255, .25);
+      box-shadow:
+        inset 0 0 18px rgba(255,255,255,.08),
+        0 0 24px rgba(0, 234, 255, .22);
+      animation: rise var(--d) linear infinite;
+      animation-delay: var(--delay);
+      opacity: var(--o);
+      filter: blur(var(--blur));
+    }
+
+    @keyframes rise {
+      0% { transform: translate3d(0, 0, 0) scale(.85); opacity: 0; }
+      10% { opacity: var(--o); }
+      75% { opacity: var(--o); }
+      100% { transform: translate3d(var(--drift), -118vh, 0) scale(1.16); opacity: 0; }
+    }
+
+    .stage {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(0, 234, 255, .2);
+      background:
+        radial-gradient(circle at 50% 38%, rgba(0, 234, 255, .18), transparent 30%),
+        radial-gradient(circle at 48% 52%, rgba(0, 245, 160, .13), transparent 24%),
+        linear-gradient(180deg, rgba(4, 10, 25, .90), rgba(5, 13, 29, .86));
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.04);
+      padding: 18px 15px 18px;
+      isolation: isolate;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        linear-gradient(130deg, transparent 0 32%, rgba(0,234,255,.11) 40%, transparent 50%),
+        radial-gradient(circle at 50% 62%, rgba(0,234,255,.20), transparent 30%);
+      opacity: .9;
+      z-index: -1;
+      animation: sheen 7s ease-in-out infinite;
+    }
+
+    @keyframes sheen {
+      0%, 100% { transform: translateX(-3%) translateY(0); opacity: .55; }
+      50% { transform: translateX(3%) translateY(-1%); opacity: 1; }
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255,255,255,.65), transparent 20%),
+        radial-gradient(circle at 70% 80%, rgba(0,245,160,.22), transparent 35%),
+        rgba(0, 142, 255, .14);
+      border: 1px solid rgba(0, 234, 255, .25);
+      box-shadow: 0 0 30px rgba(0, 174, 255, .22), inset 0 0 18px rgba(255,255,255,.06);
+      animation: floaty 5.5s ease-in-out infinite;
+      color: rgba(126, 242, 255, .95);
+      z-index: 0;
+    }
+
+    .orb svg { width: 48%; height: 48%; opacity: .9; }
+    .orb.one { width: 57px; height: 57px; top: 39px; left: 18px; animation-delay: -.6s; }
+    .orb.two { width: 68px; height: 68px; top: 48px; right: 12px; animation-delay: -2s; }
+    .orb.three { width: 52px; height: 52px; top: 340px; left: 19px; animation-delay: -1.4s; }
+    .orb.four { width: 62px; height: 62px; top: 335px; right: 14px; animation-delay: -3s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.035); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo-wrap {
+      width: 98px;
+      margin: 0 auto 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: reveal .8s var(--ease) both;
+    }
+
+    .logo-symbol {
+      width: 64px;
+      height: 54px;
+      color: #fff;
+      filter: drop-shadow(0 0 13px rgba(255,255,255,.22));
+    }
+
+    .logo-small {
+      margin-top: -3px;
+      font-size: 10px;
+      letter-spacing: .7px;
+      font-weight: 800;
+      color: rgba(255,255,255,.88);
+    }
+
+    .logo-small span { font-weight: 400; opacity: .84; }
+
+    .brand-title {
+      text-align: center;
+      font-size: clamp(38px, 12vw, 56px);
+      line-height: .9;
+      letter-spacing: -1.8px;
+      font-weight: 950;
+      margin-top: 3px;
+      text-shadow: 0 0 22px rgba(0, 234, 255, .25);
+      animation: reveal .8s var(--ease) .06s both;
+    }
+
+    .brand-subtitle {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--soft);
+      font-weight: 600;
+      animation: reveal .8s var(--ease) .12s both;
+    }
+
+    .brand-subtitle b {
+      color: var(--green);
+      font-weight: 900;
+      padding: 0 6px;
+    }
+
+    .badge {
+      width: fit-content;
+      margin: 16px auto 24px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      color: #d9fff4;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .8px;
+      background: rgba(0, 245, 160, .09);
+      border: 1px solid rgba(0, 245, 160, .42);
+      box-shadow: 0 0 22px rgba(0, 245, 160, .28), inset 0 0 14px rgba(0, 245, 160, .08);
+      animation: badgePulse 2.8s ease-in-out infinite, reveal .8s var(--ease) .18s both;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,245,160,.22), inset 0 0 14px rgba(0,245,160,.08); }
+      50% { box-shadow: 0 0 36px rgba(0,245,160,.44), inset 0 0 18px rgba(0,245,160,.13); }
+    }
+
+    .hero-title {
+      text-align: center;
+      font-weight: 950;
+      line-height: .95;
+      letter-spacing: -1.6px;
+      font-size: clamp(37px, 10vw, 55px);
+      text-shadow: 0 10px 34px rgba(0, 0, 0, .35);
+      animation: reveal .9s var(--ease) .24s both;
+    }
+
+    .hero-title span {
+      display: block;
+      background: linear-gradient(135deg, #fff 0%, #bff9ff 28%, var(--green) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 18px rgba(0,245,160,.24));
+    }
+
+    .plumbob {
+      width: 58px;
+      height: 94px;
+      margin: 23px auto 24px;
+      position: relative;
+      filter: drop-shadow(0 0 24px rgba(0,245,160,.75));
+      animation: bob 3.2s ease-in-out infinite, reveal .9s var(--ease) .32s both;
+    }
+
+    .plumbob::before,
+    .plumbob::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 29px solid transparent;
+      border-right: 29px solid transparent;
+    }
+
+    .plumbob::before {
+      top: 0;
+      border-bottom: 50px solid rgba(112, 255, 197, .96);
+    }
+
+    .plumbob::after {
+      bottom: 0;
+      border-top: 50px solid rgba(0, 219, 143, .92);
+    }
+
+    .plumbob .shine {
+      position: absolute;
+      inset: 9px 0 9px 50%;
+      width: 1px;
+      background: rgba(255,255,255,.55);
+      z-index: 2;
+      box-shadow: 12px 0 18px rgba(255,255,255,.16);
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) rotate(.4deg); }
+      50% { transform: translateY(-9px) rotate(-.4deg); }
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-top: 4px;
+    }
+
+    .cta {
+      position: relative;
+      min-height: 74px;
+      border-radius: 22px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      text-decoration: none;
+      overflow: hidden;
+      border: 1px solid rgba(0, 234, 255, .42);
+      background: rgba(8, 25, 52, .78);
+      box-shadow: 0 12px 28px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,255,255,.04);
+      transform: translateZ(0);
+      animation: reveal .8s var(--ease) both;
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease), filter .28s var(--ease);
+    }
+
+    .cta:nth-child(1) { animation-delay: .42s; }
+    .cta:nth-child(2) { animation-delay: .50s; }
+    .cta:nth-child(3) { animation-delay: .58s; }
+    .cta:nth-child(4) { animation-delay: .66s; }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.14) 42%, transparent 56%);
+      transform: translateX(-130%);
+      transition: transform .85s var(--ease);
+    }
+
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      opacity: .45;
+      z-index: -1;
+      background: radial-gradient(circle at 18% 50%, var(--glow), transparent 34%);
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      transform: translateY(-4px) scale(1.012);
+      border-color: rgba(255,255,255,.35);
+      box-shadow: 0 18px 36px rgba(0,0,0,.38), 0 0 34px color-mix(in srgb, var(--glow) 48%, transparent);
+      outline: none;
+      filter: saturate(1.08);
+    }
+
+    .cta:hover::before,
+    .cta:focus-visible::before {
+      transform: translateX(135%);
+    }
+
+    .cta:active {
+      transform: translateY(-1px) scale(.985);
+    }
+
+    .windows { --glow: #008cff; background: linear-gradient(135deg, rgba(0, 80, 180, .92), rgba(5, 20, 55, .90)); border-color: rgba(0, 174, 255, .62); }
+    .mac { --glow: #00f5df; background: linear-gradient(135deg, rgba(0, 150, 145, .88), rgba(5, 42, 59, .92)); border-color: rgba(0, 245, 223, .58); }
+    .best { --glow: #8c4dff; background: linear-gradient(135deg, rgba(92, 39, 198, .90), rgba(15, 10, 56, .92)); border-color: rgba(148, 89, 255, .68); }
+    .whats { --glow: #00e082; background: linear-gradient(135deg, rgba(0, 154, 108, .90), rgba(4, 51, 48, .92)); border-color: rgba(0, 245, 160, .62); }
+
+    .icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 54px;
+      background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.05));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 0 22px color-mix(in srgb, var(--glow) 36%, transparent);
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon-box svg {
+      width: 29px;
+      height: 29px;
+      color: #fff;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,.22));
+    }
+
+    .cta-copy {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-copy strong {
+      display: block;
+      font-size: 13.6px;
+      font-weight: 950;
+      line-height: 1.05;
+      letter-spacing: -.2px;
+    }
+
+    .cta-copy span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(255,255,255,.78);
+      font-size: 10.7px;
+      line-height: 1.25;
+      font-weight: 650;
+    }
+
+    .arrow {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
+      display: grid;
+      place-items: center;
+      color: #bffaff;
+      position: relative;
+      z-index: 1;
+      transition: transform .24s var(--ease);
+    }
+
+    .cta:hover .arrow,
+    .cta:focus-visible .arrow {
+      transform: translateX(3px);
+    }
+
+    .arrow svg { width: 24px; height: 24px; stroke-width: 4; }
+
+    .trust-bar {
+      margin-top: 16px;
+      border-radius: 21px;
+      padding: 12px 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      background: rgba(7, 20, 42, .78);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 0 0 1px rgba(0,234,255,.05);
+      animation: reveal .8s var(--ease) .74s both;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .trust-item + .trust-item {
+      border-left: 1px solid rgba(255,255,255,.14);
+    }
+
+    .trust-item svg {
+      width: 23px;
+      height: 23px;
+      color: #fff;
+      flex: 0 0 auto;
+    }
+
+    .trust-item p {
+      font-size: 10.6px;
+      line-height: 1.12;
+      color: #fff;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .trust-item p span {
+      display: block;
+      color: var(--green);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .footer {
+      margin-top: 12px;
+      text-align: center;
+      color: rgba(185, 199, 221, .64);
+      font-size: 11px;
+      animation: reveal .8s var(--ease) .8s both;
+    }
+
+    .footer strong { color: rgba(255,255,255,.84); }
+
+    .ripple {
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255,255,255,.35);
+      transform: scale(0);
+      animation: ripple .62s linear forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes ripple {
+      to { transform: scale(4.2); opacity: 0; }
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(18px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 390px) {
+      body { padding: 8px; }
+      .stage { border-radius: 28px; padding: 15px 12px 15px; }
+      .brand-title { font-size: 42px; }
+      .hero-title { font-size: 38px; }
+      .plumbob { margin: 18px auto 19px; transform: scale(.88); }
+      .cta { min-height: 68px; border-radius: 19px; gap: 10px; }
+      .icon-box { width: 49px; height: 49px; flex-basis: 49px; }
+      .cta-copy strong { font-size: 12.2px; }
+      .cta-copy span { font-size: 10px; }
+      .trust-item { gap: 5px; }
+      .trust-item p { font-size: 9.4px; }
+      .trust-item svg { width: 20px; height: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bubble-field" aria-hidden="true">
+    <span class="bubble" style="--s: 18px; --x: 8%; --d: 11s; --delay: -1s; --o: .55; --blur: 0px; --drift: 28px;"></span>
+    <span class="bubble" style="--s: 42px; --x: 19%; --d: 16s; --delay: -7s; --o: .42; --blur: .2px; --drift: -18px;"></span>
+    <span class="bubble" style="--s: 14px; --x: 32%; --d: 13s; --delay: -3s; --o: .6; --blur: 0px; --drift: 18px;"></span>
+    <span class="bubble" style="--s: 28px; --x: 48%; --d: 18s; --delay: -9s; --o: .5; --blur: .3px; --drift: -30px;"></span>
+    <span class="bubble" style="--s: 12px; --x: 61%; --d: 12s; --delay: -5s; --o: .62; --blur: 0px; --drift: 22px;"></span>
+    <span class="bubble" style="--s: 50px; --x: 73%; --d: 19s; --delay: -11s; --o: .38; --blur: .4px; --drift: 15px;"></span>
+    <span class="bubble" style="--s: 22px; --x: 84%; --d: 14s; --delay: -4s; --o: .58; --blur: 0px; --drift: -24px;"></span>
+    <span class="bubble" style="--s: 34px; --x: 92%; --d: 17s; --delay: -8s; --o: .45; --blur: .2px; --drift: -38px;"></span>
+  </div>
+
+  <main class="page">
+    <section class="stage" aria-label="Landing page BTEC Games">
+      <div class="orb one" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7 13h3m-1.5-1.5v3M16 12.2h.01M18.3 14.2h.01M6.8 17.5h10.4c2 0 3.4-1.9 2.9-3.8l-1.1-4.3A4.2 4.2 0 0 0 15 6.2H9a4.2 4.2 0 0 0-4.1 3.2l-1.1 4.3c-.5 1.9.9 3.8 2.9 3.8Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="orb two" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 5.5 12 12 22l6.5-10L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 2v20M5.5 12h13" stroke="currentColor" stroke-width="1.2" opacity=".65"/></svg>
+      </div>
+      <div class="orb three" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0v1a4 4 0 0 0 8 0v-1Z" stroke="currentColor" stroke-width="1.8"/><path d="M5 21a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <div class="orb four" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5h16v11H8l-4 3v-14Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 11h.01M12 11h.01M16 11h.01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="content">
+        <div class="logo-wrap">
+          <svg class="logo-symbol" viewBox="0 0 120 92" fill="none" aria-label="Logo BTEC Games">
+            <path d="M26 62c-9 0-16-7.7-14.6-16.7l5.2-32.5C17.7 5.5 24 1 31.2 2.3l17 3.1c7.7 1.4 15.8 1.4 23.6 0l17-3.1c7.2-1.3 13.5 3.2 14.6 10.5l5.2 32.5C110 54.3 103 62 94 62H78.4c-5.4 0-10.6-2.1-14.4-5.9l-4-4-4 4A20.4 20.4 0 0 1 41.6 62H26Z" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
+            <path d="M35 29h19M44.5 19.5v19" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+            <path d="M82 24h.2M92 34h.2M73 34h.2M83 43h.2" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+            <path d="M44 62c0 12.5 7.3 21.5 16 21.5s16-9 16-21.5" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+            <path d="M41 86h38" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+          <div class="logo-small">BTEC <span>GAMES</span></div>
+        </div>
+
+        <h2 class="brand-title">BTEC</h2>
+        <p class="brand-subtitle">Games <b>•</b> Conteúdos <b>•</b> Suporte</p>
+        <div class="badge">CARRO-CHEFE DA LOJA</div>
+
+        <h1 class="hero-title">The Sims 4 <span>Completo</span></h1>
+
+        <div class="plumbob" aria-hidden="true"><span class="shine"></span></div>
+
+        <div class="buttons">
+          <a class="cta windows" href="https://www.btecgames.com/produtos/the-sims-4-todas-expansoes-original-2023-pc-envio-digital/" target="_blank" rel="noopener" aria-label="Comprar The Sims 4 Windows Completo">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.2 10.4 4.2v7.1H3V5.2Zm8.8-1.2L21 2.7v8.6h-9.2V4ZM3 12.8h7.4v7L3 18.8v-6Zm8.8 0H21v8.5l-9.2-1.3v-7.2Z"/></svg>
+            </div>
+            <div class="cta-copy">
+              <strong>THE SIMS 4 WINDOWS COMPLETO</strong>
+              <span>O pacote completo para Windows com todas as expansões.</span>
+            </div>
+            <div class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </a>
+
+          <a class="cta mac" href="https://www.btecgames.com/produtos/the-sims-4-todas-expansoes-2026-mac-os-envio-digital-ii3i9/" target="_blank" rel="noopener" aria-label="Comprar The Sims 4 MacBook Completo">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5h16v10H4v-10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 20h6M12 15.5V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M13.9 8.1c.4-.5.7-1.1.6-1.8-.6.1-1.3.4-1.7.9-.4.4-.7 1.1-.6 1.7.6.1 1.2-.3 1.7-.8Z" fill="currentColor"/><path d="M16.1 12c0-1.6 1.3-2.3 1.3-2.4-.7-1.1-1.8-1.2-2.2-1.3-.9-.1-1.8.5-2.2.5-.5 0-1.2-.5-2-.5-1 0-2 .6-2.5 1.5-1.1 1.9-.3 4.6.8 6.1.5.7 1.1 1.5 1.9 1.5.7 0 1-.5 1.9-.5.9 0 1.1.5 1.9.5.8 0 1.3-.7 1.8-1.4.6-.8.8-1.6.8-1.6s-1.5-.6-1.5-2.4Z" fill="currentColor" opacity=".86"/></svg>
+            </div>
+            <div class="cta-copy">
+              <strong>THE SIMS 4 MACBOOK COMPLETO</strong>
+              <span>O pacote completo para Mac com todas as expansões.</span>
+            </div>
+            <div class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </a>
+
+          <a class="cta best" href="https://btecgames.com/vendidos-do-site/" target="_blank" rel="noopener" aria-label="Ver mais vendidos do site">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.5 4.4 1.1 6.2-5.7-3-5.7 3 1.1-6.2-4.5-4.4 6.3-.9L12 2.8Z"/></svg>
+            </div>
+            <div class="cta-copy">
+              <strong>MAIS VENDIDOS DO SITE</strong>
+              <span>Confira os produtos mais procurados pelos clientes.</span>
+            </div>
+            <div class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </a>
+
+          <a class="cta whats" href="https://wa.me/5518996712399?text=Oi%20vim%20do%20insta%20e%20tenho%20d%C3%BAvidas" target="_blank" rel="noopener" aria-label="Falar com a BTEC no WhatsApp">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.2c-5 0-9 3.6-9 8 0 2.4 1.2 4.5 3.1 6L5.3 21l4.1-1.9c.8.2 1.7.3 2.6.3 5 0 9-3.6 9-8.1 0-4.5-4-8.1-9-8.1Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 9.3c.4-.7.7-.8 1.2-.5l1 .6c.3.2.4.5.3.8l-.4.8c-.1.2-.1.4.1.6.5.7 1.1 1.2 1.9 1.6.2.1.4.1.6 0l.8-.4c.3-.1.6-.1.8.2l.7 1c.3.4.2.8-.4 1.2-.5.4-1.2.6-2.1.3-1.4-.4-2.6-1.2-3.5-2.2-.9-1-1.4-2.1-1.5-3 .1-.4.2-.7.5-1Z" fill="currentColor"/></svg>
+            </div>
+            <div class="cta-copy">
+              <strong>NOSSO WHATSAPP</strong>
+              <span>Fale com nossa equipe e tire todas as suas dúvidas.</span>
+            </div>
+            <div class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </a>
+        </div>
+
+        <div class="trust-bar" aria-label="Benefícios BTEC">
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5.3c0 4.4 2.8 8.3 7 9.7 4.2-1.4 7-5.3 7-9.7V6l-7-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.8 12.2 2.1 2.1 4.5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p>Compra 100%<span>Segura</span></p>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4 4 0 0 1-.6-8A5.8 5.8 0 0 1 17.8 9 4.5 4.5 0 0 1 18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 12v8m0 0 3-3m-3 3-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p>Downloads<span>Rápidos</span></p>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 13a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 13v3a2 2 0 0 0 2 2h1v-7H6a2 2 0 0 0-2 2Zm16 0v3a2 2 0 0 1-2 2h-1v-7h1a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M17 18c0 1.7-1.3 3-3 3h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>Suporte<span>Especializado</span></p>
+          </div>
+        </div>
+
+        <footer class="footer">© BTEC Games • <strong>The Sims 4 Completo</strong></footer>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll('.cta').forEach((button) => {
+      button.addEventListener('click', function (event) {
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+
+        ripple.className = 'ripple';
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+        ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+
+        button.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+      });
+    });
+  </script>
+</body>
+</html>
