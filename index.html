@@ -539,12 +539,32 @@
     requestAnimationFrame(tick);
   })();
 
+  // Origem da visita: ?src=tiktok (ou utm_source) troca a origem dos links da loja e a mensagem do WhatsApp.
+  // Sem parâmetro, fica "instagram".
+  var origem = (function () {
+    var p = new URLSearchParams(location.search);
+    var v = (p.get('src') || p.get('utm_source') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 30);
+    var apelidos = { ig: 'instagram', insta: 'instagram', tt: 'tiktok', yt: 'youtube', fb: 'facebook' };
+    return apelidos[v] || v || 'instagram';
+  })();
+  var nomeRede = { instagram: 'insta', tiktok: 'tiktok', youtube: 'youtube', facebook: 'facebook' };
+
+  document.querySelectorAll('a[href*="utm_source="]').forEach(function (a) {
+    var url = new URL(a.href);
+    url.searchParams.set('utm_source', origem);
+    a.href = url.toString();
+  });
+  document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (a) {
+    // encodeURIComponent (%20) em vez de searchParams (+), que o WhatsApp pode mostrar literalmente
+    a.href = a.href.split('?')[0] + '?text=' + encodeURIComponent('Oi vim do ' + (nomeRede[origem] || 'site') + ' e tenho dúvidas');
+  });
+
   // Cliques nos botões: envia para o Meta Pixel / GA se forem instalados depois
   document.querySelectorAll('[data-track]').forEach(function (a) {
     a.addEventListener('click', function () {
       var id = a.dataset.track;
-      if (window.fbq) fbq('trackCustom', 'CliqueLinkBio', { botao: id });
-      if (window.gtag) gtag('event', 'clique_link_bio', { botao: id });
+      if (window.fbq) fbq('trackCustom', 'CliqueLinkBio', { botao: id, origem: origem });
+      if (window.gtag) gtag('event', 'clique_link_bio', { botao: id, origem: origem });
     });
   });
 </script>
