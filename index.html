@@ -348,6 +348,37 @@
   footer a { color: #a9d8c5; font-weight: 600; }
   footer .sig { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; margin-top: 8px; opacity: .7; }
 
+  /* ---------- Som ---------- */
+  .sound {
+    position: fixed; z-index: 5; right: max(16px, calc(50% - 214px)); bottom: calc(18px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; gap: 9px; height: 46px; padding: 0 16px 0 14px;
+    border: 1px solid rgba(43,245,160,.4); border-radius: 999px; cursor: pointer;
+    background: rgba(4, 24, 18, .82); color: var(--ink);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px -8px rgba(0,0,0,.6), 0 0 22px rgba(43,245,160,.18);
+    font: 600 12.5px var(--body);
+    opacity: 0; transform: translateY(16px); animation: in .6s 1.4s cubic-bezier(.2,.8,.2,1) forwards;
+    transition: padding .3s, gap .3s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sound:active { scale: .95; }
+  .sound .txt { white-space: nowrap; overflow: hidden; max-width: 90px; transition: max-width .35s, opacity .25s; }
+  .sound.on .txt { max-width: 0; opacity: 0; }
+  .sound.on { padding: 0 14px; gap: 0; }
+  .eq { display: flex; align-items: flex-end; gap: 3px; height: 16px; }
+  .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--emerald); transition: height .3s; }
+  .sound.on .eq i { animation: eq .9s ease-in-out infinite; }
+  .sound.on .eq i:nth-child(2) { animation-delay: -.3s; }
+  .sound.on .eq i:nth-child(3) { animation-delay: -.6s; }
+  .sound.on .eq i:nth-child(4) { animation-delay: -.15s; }
+  @keyframes eq { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+  .sound:not(.on)::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit;
+    border: 1px solid var(--emerald); animation: ring 2.2s ease-out infinite; pointer-events: none;
+  }
+  @keyframes ring { 0% { opacity: .8; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
+  footer { padding-bottom: 56px; }
+
   @media (hover: hover) {
     .cta:hover { transform: translateY(-2px); }
     .tile:hover { transform: translateY(-2px); }
@@ -358,7 +389,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal { opacity: 1; transform: none; }
+    .reveal, .sound { opacity: 1; transform: none; }
     .gem { transform: rotateX(-12deg) rotateY(35deg); }
   }
 </style>
@@ -510,6 +541,12 @@
   </footer>
 </main>
 
+<audio id="bgm" src="som.m4a" preload="none" loop playsinline></audio>
+<button class="sound" id="soundBtn" type="button" aria-pressed="false" aria-label="Ligar som">
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+  <span class="txt">Ligar som</span>
+</button>
+
 <script>
   // Faíscas subindo no fundo
   (function () {
@@ -558,6 +595,45 @@
     // encodeURIComponent (%20) em vez de searchParams (+), que o WhatsApp pode mostrar literalmente
     a.href = a.href.split('?')[0] + '?text=' + encodeURIComponent('Oi vim do ' + (nomeRede[origem] || 'site') + ' e tenho dúvidas');
   });
+
+  // Som de fundo: navegadores só deixam tocar depois de um toque. Toca no botão ou no
+  // primeiro toque fora de links; se a pessoa desligar, não religa sozinho.
+  (function () {
+    var audio = document.getElementById('bgm');
+    var btn = document.getElementById('soundBtn');
+    var desligadoPeloUsuario = false;
+    var tocandoAntesDeSair = false;
+
+    function marcar(on) {
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-pressed', on);
+      btn.setAttribute('aria-label', on ? 'Desligar som' : 'Ligar som');
+    }
+    function tocar() {
+      var p = audio.play();
+      if (p && p.then) p.then(function () { marcar(true); }).catch(function () { marcar(false); });
+      else marcar(true);
+    }
+    function parar() { audio.pause(); marcar(false); }
+
+    btn.addEventListener('click', function () {
+      if (audio.paused) { desligadoPeloUsuario = false; tocar(); }
+      else { desligadoPeloUsuario = true; parar(); }
+    });
+
+    function primeiroToque(e) {
+      if (e.target.closest('a, button')) return;
+      document.removeEventListener('click', primeiroToque, true);
+      if (!desligadoPeloUsuario && audio.paused) tocar();
+    }
+    document.addEventListener('click', primeiroToque, true);
+
+    // Pausa ao ir para a loja/WhatsApp e retoma ao voltar
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { tocandoAntesDeSair = !audio.paused; audio.pause(); }
+      else if (tocandoAntesDeSair && !desligadoPeloUsuario) tocar();
+    });
+  })();
 
   // Cliques nos botões: envia para o Meta Pixel / GA se forem instalados depois
   document.querySelectorAll('[data-track]').forEach(function (a) {
